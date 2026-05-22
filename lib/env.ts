@@ -17,6 +17,7 @@ const serverEnvSchema = z.object({
   GOOGLE_BUSINESS_LOCATION_ID: z.string().min(1),
   GOOGLE_CLIENT_ID: z.string().min(1),
   GOOGLE_CLIENT_SECRET: z.string().min(1),
+  WEBHOOK_URL: z.string().url().optional(),
   SUPABASE_TEMP_BUCKET: z.string().default("media-temp"),
   SUPABASE_GALLERY_BUCKET: z.string().default("gallery-media"),
   SYNC_BATCH_LIMIT: z.coerce.number().int().min(1).max(100).default(25),

@@ -67,6 +67,26 @@ export async function publishMediaToGoogleBusiness(input: {
   requestId: string;
 }) {
   const env = getServerEnv();
+
+  // BYPASS: Use Zapier/Make.com Webhook if configured instead of Google API directly
+  if (env.WEBHOOK_URL) {
+    const response = await retry(
+      () =>
+        fetchJson<{ success?: boolean }>(env.WEBHOOK_URL!, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            mediaFormat: googleMediaFormat(input.mediaType),
+            sourceUrl: input.sourceUrl,
+            requestId: input.requestId,
+            locationId: env.GOOGLE_BUSINESS_LOCATION_ID
+          })
+        }),
+      { attempts: 3 }
+    );
+    return { name: `webhook-${input.requestId}`, status: response };
+  }
+
   const accessToken = await getGoogleAccessToken();
   const accountId = env.GOOGLE_BUSINESS_ACCOUNT_ID.replace(/^accounts\//, "");
   const locationId = env.GOOGLE_BUSINESS_LOCATION_ID.replace(/^locations\//, "");
