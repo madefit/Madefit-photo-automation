@@ -1,4 +1,4 @@
-# MadeFit Media Automation(insta,website,google)
+# MadeFit Media Automation()
 
 Production-ready background media distribution for MadeFit.
 
