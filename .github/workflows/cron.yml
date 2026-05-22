@@ -2,8 +2,8 @@ name: Automation Cron Jobs
 
 on:
   schedule:
-    # Run every 5 minutes
-    - cron: '*/5 * * * *'
+    # Run once every day at midnight UTC
+    - cron: '0 0 * * *'
   workflow_dispatch: # Allows manual trigger
 
 jobs:
@@ -17,16 +17,11 @@ jobs:
           
       - name: Trigger Retry Failed
         run: |
-          # Only run if minutes end in 0 (every 10 mins)
-          if [[ $(date +%M) == *0 ]]; then
-            curl -X GET "https://madefit-photo-automation.vercel.app/api/cron/retry-failed" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
-          fi
+          curl -X GET "https://madefit-photo-automation.vercel.app/api/cron/retry-failed" \
+          -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
           
       - name: Trigger Cleanup
         run: |
-          # Only run at the top of the hour
-          if [[ $(date +%M) == 00 ]]; then
-            curl -X GET "https://madefit-photo-automation.vercel.app/api/cron/cleanup" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
-          fi
+          curl -X GET "https://madefit-photo-automation.vercel.app/api/cron/cleanup" \
+          -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
+
