@@ -12,7 +12,15 @@ export async function getSetting(key: string) {
   if (error) throw error;
   if (!data?.value) return null;
 
-  return data.encrypted ? decryptSecret(data.value) : data.value;
+  if (data.encrypted) {
+    try {
+      return decryptSecret(data.value);
+    } catch (error) {
+      console.warn(`Failed to decrypt setting for key "${key}". The ENCRYPTION_KEY may have changed. Returning null.`);
+      return null;
+    }
+  }
+  return data.value;
 }
 
 export async function setSetting(key: string, value: string, options?: { encrypted?: boolean; description?: string }) {

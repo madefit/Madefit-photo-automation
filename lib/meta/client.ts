@@ -93,7 +93,7 @@ export async function fetchRecentInstagramMedia() {
 
   return response.data.filter(
     (item) =>
-      (item.media_type === "IMAGE" || item.media_type === "CAROUSEL_ALBUM") &&
+      item.media_type === "IMAGE" &&
       (item.media_url || item.thumbnail_url)
   );
 }
